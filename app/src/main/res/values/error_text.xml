@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="password_empty">The password is empty</string>
+    <string name="passwords_not_equal">Passwords are not equal</string>
+    <string name="password_too_short">The password is too short</string>
+</resources>
