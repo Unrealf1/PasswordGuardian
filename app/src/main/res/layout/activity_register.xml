@@ -53,11 +53,12 @@
         android:id="@+id/error_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Error: errors"
+        android:text=""
         android:textColor="#F22828"
         android:textSize="24sp"
         android:textStyle="bold"
         android:background="@drawable/text_border"
+        android:visibility="invisible"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/registerButton" />
