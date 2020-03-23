@@ -1,6 +1,5 @@
 package com.unreal.passwordguardian
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -24,13 +23,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val masterHash = if (savedInstanceState == null) {
+        masterHash = if (savedInstanceState == null) {
             val extras = intent.extras
             extras?.getString(KEY_PASSWORD)
         } else {
             savedInstanceState.getSerializable(KEY_PASSWORD) as String?
         } ?: ""
-        val data = PasswordEntryLoader.load(this, masterHash) ?: exitProcess(1)
+        data = PasswordEntryLoader.load(this, masterHash) ?: exitProcess(1)
         val filterTextEdit = findViewById<EditText>(R.id.filterText)
         val createNewButton = findViewById<Button>(R.id.buttonCreateNew)
         val settingsButton = findViewById<Button>(R.id.buttonSettings)
@@ -74,8 +73,7 @@ class MainActivity : AppCompatActivity() {
                 .setPositiveButton(R.string.button_accept) { _, _ ->
                     Toast.makeText(this, "Password added", Toast.LENGTH_SHORT).show()
                     addPassword(PasswordEntry(newPassword.text.toString(), newName.text.toString()),
-                                data,
-                                masterHash)
+                                data)
                     updatePasswords(data)
                 }
                 .setNegativeButton(R.string.button_cancel) { _, _ ->
@@ -97,9 +95,14 @@ class MainActivity : AppCompatActivity() {
         updatePasswords(data)
     }
 
+    fun removePassword(passwordEntry: PasswordEntry,
+                               data: MutableList<PasswordEntry>) {
+        data.remove(passwordEntry)
+        PasswordEntryLoader.save(this, data, masterHash)
+    }
+
     private fun addPassword(passwordEntry: PasswordEntry,
-                            data: MutableList<PasswordEntry>,
-                            masterHash: String) {
+                            data: MutableList<PasswordEntry>) {
         data.add(passwordEntry)
         PasswordEntryLoader.save(this, data, masterHash)
     }
@@ -109,12 +112,22 @@ class MainActivity : AppCompatActivity() {
             entry.cite.contains(filter) || entry.description?.contains(filter) ?: false }
     }
 
-    private fun updatePasswords(data: List<PasswordEntry>) {
-        passwordsView?.adapter = PasswordsAdapter(data) { password ->
+    fun updatePasswords(data: List<PasswordEntry>) {
+        passwordsView?.adapter = PasswordsAdapter(data, this) { password ->
             onPasswordClick?.invoke(password)
         }
     }
 
+    fun updatePasswords() {
+        updatePasswords(data)
+    }
+
+    fun getData() : MutableList<PasswordEntry> {
+        return data
+    }
+
+    private var masterHash = ""
     private var passwordsView: RecyclerView? = null
     private var onPasswordClick : ((PasswordEntry) -> Unit)? = null
+    private var data = mutableListOf<PasswordEntry>()
 }
