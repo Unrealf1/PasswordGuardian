@@ -7,4 +7,6 @@ object CommonConstants {
     const val FILENAME_SALT = "salt"
     const val FILENAME_IV = "iv"
     const val KEY_REGISTERED = "registered"
+    const val FILENAME_VERIFICATION = "verification"
+    const val VerificationConstant = "PasswordGuardian"
 }

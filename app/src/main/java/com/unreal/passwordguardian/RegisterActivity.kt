@@ -3,6 +3,8 @@ package com.unreal.passwordguardian
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -11,6 +13,7 @@ import android.widget.Toast
 import com.unreal.passwordguardian.CommonConstants.KEY_REGISTERED
 import com.unreal.passwordguardian.CommonConstants.PREF_NAME
 import com.unreal.passwordguardian.EntryActivity.Companion.enter
+import java.io.File
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -71,7 +74,8 @@ class RegisterActivity : AppCompatActivity() {
                 val editor = preferences.edit()
                 editor.putBoolean(KEY_REGISTERED, true)
                 editor.apply()
-                Toast.makeText(this, "Registered successfully", Toast.LENGTH_SHORT).show()
+                createVerification(password1)
+                Toast.makeText(this, R.string.succesiful_registration_toast, Toast.LENGTH_SHORT).show()
 
                 enter(this, password1)
             } else {
@@ -79,21 +83,42 @@ class RegisterActivity : AppCompatActivity() {
             }
 
         }
+        val activity = this
+        val errorSignWatcher = object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                val password1 = passwordRegister.text.toString()
+                val password2 = passwordRepeat.text.toString()
 
-        passwordRegister.setOnFocusChangeListener { _: View, _: Boolean ->
-            val password1 = passwordRegister.text.toString()
-            val password2 = passwordRepeat.text.toString()
+                val error = checkPasswords(password1, password2)
 
-            val error = checkPasswords(password1, password2)
+                if (error == PasswordError.OK) {
+                    errorText.visibility = View.INVISIBLE
+                } else {
+                    errorText.visibility = View.VISIBLE
+                    errorText.text = error.getText(activity)
+                }
+            }
 
-            if (error == PasswordError.OK) {
-                errorText.visibility = View.INVISIBLE
-            } else {
-                errorText.visibility = View.VISIBLE
-                errorText.text = error.getText(this)
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
             }
         }
 
+        passwordRegister.addTextChangedListener(errorSignWatcher)
+        passwordRepeat.addTextChangedListener(errorSignWatcher)
+    }
+
+    private fun createVerification(masterPassword: String) {
+        val file = File(this.filesDir, CommonConstants.FILENAME_VERIFICATION)
+        file.createNewFile()
+        file.writeBytes(EncryptionManager.encrypt(
+            CommonConstants.VerificationConstant.toByteArray(),
+            masterPassword,
+            this))
     }
 
     companion object {

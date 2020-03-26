@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.unreal.passwordguardian.CommonConstants.KEY_PASSWORD
 import com.unreal.passwordguardian.CommonConstants.KEY_REGISTERED
 import com.unreal.passwordguardian.CommonConstants.PREF_NAME
-import java.security.MessageDigest
 
 
 class EntryActivity : AppCompatActivity() {
@@ -26,7 +25,7 @@ class EntryActivity : AppCompatActivity() {
 
         confirmButton.setOnClickListener {
             val password = passwordEdit.text.toString()
-            if (EncryptionManager.verify(password)) {
+            if (EncryptionManager.verify(password, this)) {
                 enter(this, password)
             } else {
                 Toast.makeText(this, R.string.wrong_password_text, Toast.LENGTH_LONG).show()
@@ -44,10 +43,7 @@ class EntryActivity : AppCompatActivity() {
         fun enter(context: Context, password: String) {
             val intent = Intent(context, MainActivity::class.java)
 
-            val md: MessageDigest = MessageDigest.getInstance("SHA256")
-            md.update(password.toByteArray())
-            val hash = md.digest().toString()
-            intent.putExtra(KEY_PASSWORD, hash)
+            intent.putExtra(KEY_PASSWORD, password)
             intent.flags =  Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             context.startActivity(intent)
         }

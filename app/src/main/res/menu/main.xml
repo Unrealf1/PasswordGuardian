@@ -6,6 +6,9 @@
         android:title="@string/settings_button_text"
         android:id="@+id/actionSettings"/>
     <item
+        android:title="@string/change_master_password"
+        android:id="@+id/actionChangePassword"/>
+    <item
         android:title="@string/about_button_text"
         android:id="@+id/actionAbout"/>
 </menu>
