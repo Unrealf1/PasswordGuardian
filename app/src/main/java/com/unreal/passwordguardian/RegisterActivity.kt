@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import com.unreal.passwordguardian.CommonConstants.KEY_PASSWORD
+import com.unreal.passwordguardian.CommonConstants.KEY_REGISTERED
 import com.unreal.passwordguardian.CommonConstants.PREF_NAME
 import com.unreal.passwordguardian.EntryActivity.Companion.enter
 
@@ -69,7 +69,7 @@ class RegisterActivity : AppCompatActivity() {
             if (error == PasswordError.OK) {
                 val preferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
                 val editor = preferences.edit()
-                editor.putString(KEY_PASSWORD, password1)
+                editor.putBoolean(KEY_REGISTERED, true)
                 editor.apply()
                 Toast.makeText(this, "Registered successfully", Toast.LENGTH_SHORT).show()
 

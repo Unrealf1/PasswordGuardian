@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.unreal.passwordguardian.CommonConstants.KEY_PASSWORD
+import com.unreal.passwordguardian.CommonConstants.KEY_REGISTERED
 import com.unreal.passwordguardian.CommonConstants.PREF_NAME
 import java.security.MessageDigest
 
@@ -21,19 +22,18 @@ class EntryActivity : AppCompatActivity() {
         val passwordEdit = findViewById<EditText>(R.id.passwordEditText)
         val confirmButton = findViewById<Button>(R.id.confirmButton)
 
-        val preferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        val realPassword = preferences.getString(KEY_PASSWORD, null)
+        val sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
         confirmButton.setOnClickListener {
             val password = passwordEdit.text.toString()
-            if (password == realPassword) {
+            if (EncryptionManager.verify(password)) {
                 enter(this, password)
             } else {
                 Toast.makeText(this, R.string.wrong_password_text, Toast.LENGTH_LONG).show()
             }
         }
 
-        if (realPassword == null) {
+        if (!sharedPreferences.getBoolean(KEY_REGISTERED, false)) {
             val intent = Intent(this, RegisterActivity::class.java)
             intent.flags =  Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
@@ -42,10 +42,9 @@ class EntryActivity : AppCompatActivity() {
 
     companion object {
         fun enter(context: Context, password: String) {
-            val md: MessageDigest = MessageDigest.getInstance("SHA256")
-
             val intent = Intent(context, MainActivity::class.java)
 
+            val md: MessageDigest = MessageDigest.getInstance("SHA256")
             md.update(password.toByteArray())
             val hash = md.digest().toString()
             intent.putExtra(KEY_PASSWORD, hash)

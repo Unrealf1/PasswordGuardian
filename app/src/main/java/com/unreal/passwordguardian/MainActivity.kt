@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -23,21 +25,23 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val extras = intent.extras
+
         masterHash = if (savedInstanceState == null) {
-            val extras = intent.extras
             extras?.getString(KEY_PASSWORD)
         } else {
             savedInstanceState.getSerializable(KEY_PASSWORD) as String?
         } ?: ""
         data = PasswordEntryLoader.load(this, masterHash) ?: exitProcess(1)
+
         val filterTextEdit = findViewById<EditText>(R.id.filterText)
         val createNewButton = findViewById<Button>(R.id.buttonCreateNew)
-        val settingsButton = findViewById<Button>(R.id.buttonSettings)
+
 
         filterTextEdit.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 val newData = filterPasswords(s.toString(), data)
-                updatePasswords(newData)
+                updateVisiblePasswords(newData)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -52,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         createNewButton.setOnClickListener {
 
             val inflater = this.layoutInflater
-            val view: View = inflater.inflate(R.layout.new_entry_popup, null) // this line
+            val view: View = inflater.inflate(R.layout.new_entry_popup, null)
 
             val generatePasswordButton = view.findViewById<Button>(R.id.generatePasswordButton)
             val newPassword = view.findViewById<EditText>(R.id.newEntryPasswordField)
@@ -74,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Password added", Toast.LENGTH_SHORT).show()
                     addPassword(PasswordEntry(newPassword.text.toString(), newName.text.toString()),
                                 data)
-                    updatePasswords(data)
+                    updateVisiblePasswords(data)
                 }
                 .setNegativeButton(R.string.button_cancel) { _, _ ->
 
@@ -85,14 +89,37 @@ class MainActivity : AppCompatActivity() {
             dialog.show()
         }
 
-        settingsButton.setOnClickListener {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-        }
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         passwordsView = findViewById(R.id.passwords)
         passwordsView?.layoutManager = LinearLayoutManager(this)
-        updatePasswords(data)
+        updateVisiblePasswords(data)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.actionSettings -> {
+                val intent = Intent(this, SettingsActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.actionAbout -> {
+                val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+                    .setPositiveButton(R.string.button_accept, null)
+                    .setTitle(getString(R.string.about_title))
+                    .setMessage(getString(R.string.about_message))
+                builder.create().show()
+            }
+            else -> {
+
+            }
+        }
+        return true
     }
 
     fun removePassword(passwordEntry: PasswordEntry,
@@ -112,14 +139,12 @@ class MainActivity : AppCompatActivity() {
             entry.cite.contains(filter) || entry.description?.contains(filter) ?: false }
     }
 
-    fun updatePasswords(data: List<PasswordEntry>) {
-        passwordsView?.adapter = PasswordsAdapter(data, this) { password ->
-            onPasswordClick?.invoke(password)
-        }
+    fun updateVisiblePasswords(data: List<PasswordEntry>) {
+        passwordsView?.adapter = PasswordsAdapter(data, this)
     }
 
-    fun updatePasswords() {
-        updatePasswords(data)
+    fun updateVisiblePasswords() {
+        updateVisiblePasswords(data)
     }
 
     fun getData() : MutableList<PasswordEntry> {
@@ -128,6 +153,5 @@ class MainActivity : AppCompatActivity() {
 
     private var masterHash = ""
     private var passwordsView: RecyclerView? = null
-    private var onPasswordClick : ((PasswordEntry) -> Unit)? = null
     private var data = mutableListOf<PasswordEntry>()
 }

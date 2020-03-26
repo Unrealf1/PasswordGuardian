@@ -1,5 +1,6 @@
 package com.unreal.passwordguardian
 
+import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -15,8 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class PasswordViewHolder(
     itemView: ConstraintLayout,
-    private val mainActivity: MainActivity,
-    val onClick : (PasswordEntry) -> Unit)
+    private val mainActivity: MainActivity)
                 : RecyclerView.ViewHolder(itemView) {
 
     private var citeTextView : TextView? = itemView.findViewById(R.id.password_entry_cite)
@@ -26,7 +26,7 @@ class PasswordViewHolder(
     fun bind(entry: PasswordEntry) {
         citeTextView?.text = "${entry.cite}\n${entry.password}"
         citeTextView?.setOnClickListener {
-            onClick(entry)
+
         }
 
         citeTextView?.setOnLongClickListener {
@@ -40,22 +40,32 @@ class PasswordViewHolder(
         }
 
         removeButton.setOnClickListener {
-            mainActivity.removePassword(entry, mainActivity.getData())
-            mainActivity.updatePasswords()
+            val builder: AlertDialog.Builder = AlertDialog.Builder(mainActivity)
+                .setMessage(R.string.confirm_deletion_message)
+                .setPositiveButton(R.string.button_accept) {_, _ ->
+                    mainActivity.removePassword(entry, mainActivity.getData())
+                    mainActivity.updateVisiblePasswords()
+                    Toast.makeText(mainActivity, "Removed entry", Toast.LENGTH_SHORT).show()
+                }
+                .setNegativeButton(R.string.button_cancel) {_, _ ->
+
+                }
+            builder.create().show()
         }
     }
 }
 
 class PasswordsAdapter (
     private val passwords: List<PasswordEntry>,
-    private val mainActivity: MainActivity,
-    private val onClick : (PasswordEntry) -> Unit
-) : RecyclerView.Adapter<PasswordViewHolder>() {
+    private val mainActivity: MainActivity
+    ) : RecyclerView.Adapter<PasswordViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PasswordViewHolder {
-        val inflater = parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val itemView = inflater.inflate(R.layout.password_entry, parent, false) as ConstraintLayout
+        val inflater =
+            parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val itemView =
+            inflater.inflate(R.layout.password_entry, parent, false) as ConstraintLayout
 
-        return PasswordViewHolder(itemView, mainActivity, onClick)
+        return PasswordViewHolder(itemView, mainActivity)
     }
 
     override fun getItemCount(): Int {
