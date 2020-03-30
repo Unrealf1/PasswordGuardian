@@ -1,6 +1,9 @@
 package com.unreal.passwordguardian
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -11,6 +14,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.unreal.passwordguardian.CommonConstants.KEY_REGISTERED
+import com.unreal.passwordguardian.CommonConstants.KEY_REGISTER_INTENTION
 import com.unreal.passwordguardian.CommonConstants.PREF_NAME
 import com.unreal.passwordguardian.EntryActivity.Companion.enter
 import java.io.File
@@ -58,6 +62,16 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
+        val extras = intent.extras
+
+        // If intention is true, then this activity is called from main
+        // activity to change master password
+        val intention = if (savedInstanceState == null) {
+            extras?.getBoolean(KEY_REGISTER_INTENTION)
+        } else {
+            savedInstanceState.getSerializable(KEY_REGISTER_INTENTION) as Boolean?
+        } ?: false
+
         val passwordRegister = findViewById<EditText>(R.id.passwordRegisterText)
         val passwordRepeat = findViewById<EditText>(R.id.passwordRepeatText)
         val registerButton = findViewById<Button>(R.id.registerButton)
@@ -70,14 +84,23 @@ class RegisterActivity : AppCompatActivity() {
             val error = checkPasswords(password1, password2)
 
             if (error == PasswordError.OK) {
-                val preferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-                val editor = preferences.edit()
-                editor.putBoolean(KEY_REGISTERED, true)
-                editor.apply()
+                if (!intention) {
+                    val preferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+                    val editor = preferences.edit()
+                    editor.putBoolean(KEY_REGISTERED, true)
+                    editor.apply()
+                }
                 createVerification(password1)
                 Toast.makeText(this, R.string.succesiful_registration_toast, Toast.LENGTH_SHORT).show()
 
-                enter(this, password1)
+                if (!intention) {
+                    enter(this, password1)
+                } else {
+                    val data = Intent()
+                    data.data = Uri.parse(password1)
+                    setResult(Activity.RESULT_OK, data)
+                    finish()
+                }
             } else {
                 Toast.makeText(this, error.getText(this), Toast.LENGTH_SHORT).show()
             }

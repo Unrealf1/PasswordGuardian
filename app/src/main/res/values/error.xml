@@ -3,4 +3,7 @@
     <string name="password_empty">The password is empty</string>
     <string name="passwords_not_equal">Passwords are not equal</string>
     <string name="password_too_short">The password is too short</string>
+    <string name="error_dialog_title">Error occurred!</string>
+    <string name="error_still_loading">Application is still loading data</string>
+    <string name="error_could_not_change_password">Could not change password</string>
 </resources>

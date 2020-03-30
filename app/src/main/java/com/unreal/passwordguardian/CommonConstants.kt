@@ -9,4 +9,5 @@ object CommonConstants {
     const val KEY_REGISTERED = "registered"
     const val FILENAME_VERIFICATION = "verification"
     const val VerificationConstant = "PasswordGuardian"
+    const val KEY_REGISTER_INTENTION = "register_intention"
 }

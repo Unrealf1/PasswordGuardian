@@ -1,4 +1,4 @@
-package com.unreal.passwordguardian
+package com.unreal.passwordguardian.PasswordEntry
 
 import android.app.AlertDialog
 import android.content.ClipData
@@ -12,11 +12,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.unreal.passwordguardian.MainActivity
+import com.unreal.passwordguardian.R
 
 
 class PasswordViewHolder(
     itemView: ConstraintLayout,
-    private val mainActivity: MainActivity)
+    private val mainActivity: MainActivity
+)
                 : RecyclerView.ViewHolder(itemView) {
 
     private var citeTextView : TextView? = itemView.findViewById(R.id.password_entry_cite)
@@ -34,7 +37,8 @@ class PasswordViewHolder(
             val clip = ClipData.newPlainText("password", entry.password)
             myClipboard.setPrimaryClip(clip)
 
-            Toast.makeText(mainActivity, R.string.copy_to_clipboard_text, Toast.LENGTH_SHORT).show()
+            Toast.makeText(mainActivity,
+                R.string.copy_to_clipboard_text, Toast.LENGTH_SHORT).show()
 
             true
         }
@@ -42,12 +46,10 @@ class PasswordViewHolder(
         removeButton.setOnClickListener {
             val builder: AlertDialog.Builder = AlertDialog.Builder(mainActivity)
                 .setMessage(R.string.confirm_deletion_message)
-                .setPositiveButton(R.string.button_accept) {_, _ ->
-                    mainActivity.removePassword(entry, mainActivity.getData())
-                    mainActivity.updateVisiblePasswords()
-                    Toast.makeText(mainActivity, "Removed entry", Toast.LENGTH_SHORT).show()
+                .setPositiveButton(R.string.button_accept) { _, _ ->
+                    mainActivity.removePassword(entry)
                 }
-                .setNegativeButton(R.string.button_cancel) {_, _ ->
+                .setNegativeButton(R.string.button_cancel) { _, _ ->
 
                 }
             builder.create().show()
@@ -65,7 +67,10 @@ class PasswordsAdapter (
         val itemView =
             inflater.inflate(R.layout.password_entry, parent, false) as ConstraintLayout
 
-        return PasswordViewHolder(itemView, mainActivity)
+        return PasswordViewHolder(
+            itemView,
+            mainActivity
+        )
     }
 
     override fun getItemCount(): Int {

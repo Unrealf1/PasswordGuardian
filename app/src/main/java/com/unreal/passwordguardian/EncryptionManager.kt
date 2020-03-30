@@ -58,7 +58,6 @@ object EncryptionManager{
     }
 
     fun decrypt(bytes: ByteArray, key: String, context: Context): ByteArray {
-
         val saltFile = File(
             context.filesDir,
             CommonConstants.FILENAME_SALT

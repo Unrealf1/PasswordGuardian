@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PasswordGuardian</string>
+    <string name="password_empty">Пароль пуст</string>
+    <string name="passwords_not_equal">Пароли не совпадают</string>
+    <string name="password_too_short">Слишком короткий пароль</string>
+    <string name="error_dialog_title">Произошла ошибка!</string>
+    <string name="error_still_loading">Приложение ещё загружает данные</string>
+    <string name="error_could_not_change_password">Не удалось поменять пароль</string>
+    <string name="entry_text">Введите мастер-пароль</string>
+    <string name="password_field_text">Пароль</string>
+    <string name="confirm_button_text">Подтверждение</string>
+    <string name="register_text">Придумайте мастер-пароль</string>
+    <string name="register_button_text">Подтвердите мастер-пароль</string>
+    <string name="wrong_password_text">Вы уверены, что хотите удалить даное вхождение?</string>
+    <string name="password_repeat_field_text">Повторите пароль</string>
+    <string name="filter_field_text">Начните вводить название</string>
+    <string name="filter_button_text">Поиск</string>
+    <string name="title_activity_settings">Настройки</string>
+    <string name="settings_button_text">Настройки</string>
+    <string name="new_entry_name_text">Имя</string>
+    <string name="new_entry_password_text">Пароль</string>
+    <string name="generate_password_button">Сгенерировать пароль</string>
+    <string name="new_entry_popup_title">Создать новое вхождение</string>
+    <string name="button_cancel">Отмена</string>
+    <string name="settings_header_random_password">Случайный пароль</string>
+    <string name="copy_to_clipboard_text">Скопировано в буфер обмена!</string>
+    <string name="about_button_text">О приложении</string>
+    <string name="about_title">О приложении</string>
+    <string name="about_message">Спасибо за курс, было интересно!\\nПри долгом нажатии на пароль он скопирется в буфер обмена.\\n Все пароли(в том числе мастер-пароль) никогда не хранятся в незашифрованном виде, так что даже пользователь с root правами не сможет узнать хранящиеся тут пароли</string>
+    <string name="change_master_password">Сменить мастер-пароль</string>
+    <string name="confirm_deletion_message">Вы уверены, что хотите удалить данное вхождение?</string>
+    <string name="if_search_in_passwords_preference_title">Фильтровать вхождения по паролям</string>
+    <string name="settings_header_general">Общие</string>
+    <string name="succesiful_registration_toast">Регистрация успешна</string>
+</resources>
