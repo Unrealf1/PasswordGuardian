@@ -12,7 +12,6 @@
     <string name="confirm_button_text">Подтверждение</string>
     <string name="register_text">Придумайте мастер-пароль</string>
     <string name="register_button_text">Подтвердите мастер-пароль</string>
-    <string name="wrong_password_text">Вы уверены, что хотите удалить даное вхождение?</string>
     <string name="password_repeat_field_text">Повторите пароль</string>
     <string name="filter_field_text">Начните вводить название</string>
     <string name="filter_button_text">Поиск</string>
@@ -27,10 +26,11 @@
     <string name="copy_to_clipboard_text">Скопировано в буфер обмена!</string>
     <string name="about_button_text">О приложении</string>
     <string name="about_title">О приложении</string>
-    <string name="about_message">Спасибо за курс, было интересно!\\nПри долгом нажатии на пароль он скопирется в буфер обмена.\\n Все пароли(в том числе мастер-пароль) никогда не хранятся в незашифрованном виде, так что даже пользователь с root правами не сможет узнать хранящиеся тут пароли</string>
+    <string name="about_message">Спасибо за курс, было интересно! При долгом нажатии на пароль он скопирется в буфер обмена.  Все пароли(в том числе мастер-пароль) никогда не хранятся в незашифрованном виде, так что даже пользователь с root правами не сможет узнать хранящиеся тут пароли</string>
     <string name="change_master_password">Сменить мастер-пароль</string>
     <string name="confirm_deletion_message">Вы уверены, что хотите удалить данное вхождение?</string>
     <string name="if_search_in_passwords_preference_title">Фильтровать вхождения по паролям</string>
     <string name="settings_header_general">Общие</string>
     <string name="succesiful_registration_toast">Регистрация успешна</string>
+    <string name="wrong_password_text">Неверный пароль</string>
 </resources>
